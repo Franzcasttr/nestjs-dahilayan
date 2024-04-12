@@ -19,21 +19,22 @@ model AdminLogin {
 }
 
 model User {
-  id            String     @id @default(uuid())
+  id            String       @id @default(uuid())
   name          String?
   date_of_birth String?
   gender        String?
   password      String?
-  email         String?    @unique
-  image         String     @default("https://res.cloudinary.com/dyvisacbu/image/upload/v1664698266/Hotel%20User%20Image/1664698260709-account_ttr2cd.png")
-  phone_number  Int?       @unique
-  role          Role?      @default(User)
+  email         String?      @unique
+  image         String       @default("https://res.cloudinary.com/dyvisacbu/image/upload/v1664698266/Hotel%20User%20Image/1664698260709-account_ttr2cd.png")
+  phone_number  Int?         @unique
+  role          Role?        @default(User)
   userreviewId  String?
-  createdAt     DateTime   @default(now())
+  createdAt     DateTime     @default(now())
   Booked        Bookings[]
-  favorite      Favorite[] @relation("favorited")
+  favorite      Favorite[]   @relation("favorited")
   reviews       Reviews[]
-  user          Favorite?  @relation("User", fields: [userreviewId], references: [id])
+  user          Favorite?    @relation("User", fields: [userreviewId], references: [id])
+  permissions   Permission[]
 }
 
 model Rooms {
@@ -134,4 +135,10 @@ enum Status {
   Check_In
   Check_Out
   Completed
+}
+
+enum Permission {
+  ADMIN
+  USER
+  DEVELOPER
 }
