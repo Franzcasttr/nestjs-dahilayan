@@ -3,14 +3,24 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/module/prisma/prisma.service';
 import { getAuth } from 'firebase-admin/auth';
 import { IGetAllUserResponse } from '../interface/getAllUserResponse.interface';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { FirebaseAdmin } from 'src/config/firebase.setup';
 
 @Injectable()
 export class AdminUsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly admin: FirebaseAdmin,
+  ) {}
 
-  async createUser(data: Prisma.UserCreateInput): Promise<{ msg: string }> {
+  async createUser(
+    data: CreateUserDto,
+  ): Promise<{ result: CreateUserDto; msg: string }> {
+    const app = this.admin.setup();
+    const { permissions } = data;
     try {
-      await getAuth()
+      const user = await app
+        .auth()
         .createUser({
           displayName: data.name,
           email: data.email,
@@ -18,17 +28,18 @@ export class AdminUsersService {
           photoURL:
             'https://res.cloudinary.com/dyvisacbu/image/upload/v1664698266/Hotel%20User%20Image/1664698260709-account_ttr2cd.png',
         })
-        .then(async (user) => {
-          await this.prisma.user.create({
-            data: {
-              id: user.uid,
-              name: user.displayName,
-              email: user.email,
-            },
-          });
-        });
+        .then((user) => user);
 
-      return { msg: 'Successfully Created!' };
+      await app.auth().setCustomUserClaims(user.uid, { permissions });
+
+      const result = await this.prisma.user.create({
+        data: {
+          id: user.uid,
+          name: user.displayName,
+          email: user.email,
+        },
+      });
+      return { result, msg: 'Successfully Created!' };
     } catch (error) {
       console.log(error);
       throw new BadRequestException(
@@ -38,8 +49,9 @@ export class AdminUsersService {
   }
 
   async setCustomClaim(uid: string) {
+    const app = this.admin.setup();
     try {
-      await getAuth().setCustomUserClaims(uid, {
+      await app.auth().setCustomUserClaims(uid, {
         SuperAdmin: true,
       });
       return { msg: 'Success' };
@@ -89,22 +101,20 @@ export class AdminUsersService {
   }
 
   async deleteUser(id: string) {
+    const app = this.admin.setup();
     try {
-      const findUser = await this.prisma.user.findUnique({
+      await this.prisma.user.findUnique({
         where: {
           id: id,
         },
       });
-      if (!findUser) {
-        throw new BadRequestException('Something went wrong please try again!');
-      } else {
-        getAuth().deleteUser(id);
 
-        await this.prisma.user.delete({
-          where: { id },
-        });
-        return { msg: 'Successfully deleted!' };
-      }
+      app.auth().deleteUser(id);
+
+      await this.prisma.user.delete({
+        where: { id },
+      });
+      return { msg: 'Successfully deleted!' };
     } catch (error) {
       if (error instanceof Error) {
         throw new BadRequestException({ errorMsg: error.message });

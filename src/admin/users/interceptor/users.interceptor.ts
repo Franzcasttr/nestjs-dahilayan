@@ -4,11 +4,16 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class UsersInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    return next.handle();
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler<CreateUserDto>,
+  ): Observable<any> {
+    return next.handle().pipe(map((data) => instanceToPlain(data)));
   }
 }
