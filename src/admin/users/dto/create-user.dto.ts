@@ -1,4 +1,4 @@
-import { Permission } from '@prisma/client';
+import { Roles } from '@prisma/client';
 import { Exclude } from 'class-transformer';
 import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
@@ -18,6 +18,6 @@ export class CreateUserDto {
   password: string;
 
   @IsNotEmpty()
-  @IsEnum(Permission, { each: true })
-  permissions: Permission[];
+  @IsEnum(Roles, { each: true })
+  roles: Roles[];
 }

@@ -35,12 +35,12 @@ export class AdminUserController {
   }
 
   @Post('set-custom-claims')
-  setCustomClaim(@Body() uid: string) {
-    return this.usersService.setCustomClaim(uid);
+  setCustomClaim(@Body() uid: string, roles: string[]) {
+    return this.usersService.setCustomClaim(uid, roles);
   }
 
   @Get()
-  @Auth('ADMIN')
+  @Auth('Admin', 'SuperAdmin')
   getAllUsers(
     @Query('pages') pages: number,
     @Query('search') search: string,
@@ -49,12 +49,14 @@ export class AdminUserController {
   }
 
   @Delete(':id')
+  @Auth('Admin')
   @UseInterceptors(DeleteUserInterceptor)
   deleteOne(@Param('id') id: string) {
     return this.usersService.deleteUser(id);
   }
 
   @Put(':id')
+  @Auth('Admin', 'SuperAdmin')
   updateOne(@Param('id') id: string, @Body() data: CreateUserDto) {
     return this.usersService.updateOne(id, data);
   }
