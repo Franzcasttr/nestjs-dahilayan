@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/module/prisma/prisma.service';
-import { getAuth } from 'firebase-admin/auth';
 import { IGetAllUserResponse } from '../interface/getAllUserResponse.interface';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { FirebaseAdmin } from 'src/config/firebase.setup';
@@ -17,7 +16,10 @@ export class AdminUsersService {
     data: CreateUserDto,
   ): Promise<{ result: CreateUserDto; msg: string }> {
     const app = this.admin.setup();
-    const { permissions } = data;
+    const { roles } = data;
+    if (!Array.isArray(roles)) {
+      throw new BadRequestException('Roles must be an array');
+    }
     try {
       const user = await app
         .auth()
@@ -30,13 +32,14 @@ export class AdminUsersService {
         })
         .then((user) => user);
 
-      await app.auth().setCustomUserClaims(user.uid, { permissions });
+      await app.auth().setCustomUserClaims(user.uid, { roles });
 
       const result = await this.prisma.user.create({
         data: {
           id: user.uid,
           name: user.displayName,
           email: user.email,
+          roles,
         },
       });
       return { result, msg: 'Successfully Created!' };
@@ -48,11 +51,11 @@ export class AdminUsersService {
     }
   }
 
-  async setCustomClaim(uid: string) {
+  async setCustomClaim(uid: string, roles: string[]) {
     const app = this.admin.setup();
     try {
       await app.auth().setCustomUserClaims(uid, {
-        SuperAdmin: true,
+        roles,
       });
       return { msg: 'Success' };
     } catch (error) {
@@ -77,7 +80,9 @@ export class AdminUsersService {
             contains: searchQuery,
             mode: 'insensitive',
           },
-          role: 'User',
+          roles: {
+            has: 'User',
+          },
         },
         orderBy: {
           createdAt: 'desc',
@@ -116,6 +121,7 @@ export class AdminUsersService {
       });
       return { msg: 'Successfully deleted!' };
     } catch (error) {
+      console.log('Error ', error);
       if (error instanceof Error) {
         throw new BadRequestException({ errorMsg: error.message });
       } else {
@@ -125,8 +131,11 @@ export class AdminUsersService {
   }
 
   async updateOne(id: string, data: Prisma.UserCreateInput) {
+    const app = this.admin.setup();
+    const { roles } = data;
     if (data.password) {
-      getAuth()
+      app
+        .auth()
         .updateUser(id, {
           displayName: data.name,
           email: data.email,
@@ -145,8 +154,12 @@ export class AdminUsersService {
               gender: data.gender,
               email: updatedUserData.email,
               phone_number: data.phone_number,
+              roles,
             },
           });
+          if (updatedUser !== null || updatedUser !== undefined) {
+            await app.auth().setCustomUserClaims(id, { roles });
+          }
           return { updatedUser, msg: 'Successfully updated rooms' };
         })
         .catch((error) => {
@@ -160,7 +173,8 @@ export class AdminUsersService {
           }
         });
     } else {
-      getAuth()
+      app
+        .auth()
         .updateUser(id, {
           displayName: data.name,
           email: data.email,
@@ -178,8 +192,12 @@ export class AdminUsersService {
               gender: data.gender,
               email: updatedUserData.email,
               phone_number: data.phone_number,
+              roles,
             },
           });
+          if (updatedUser !== null || updatedUser !== undefined) {
+            await app.auth().setCustomUserClaims(id, { roles });
+          }
           return { updatedUser, msg: 'Successfully updated rooms' };
         })
         .catch((error) => {

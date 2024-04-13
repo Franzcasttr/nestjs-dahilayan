@@ -6,14 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-// import { Observable } from 'rxjs';
 import { FirebaseAdmin } from 'src/config/firebase.setup';
-// import { Roles } from 'src/decorators/role.decorator';
-
-// const fakeUser = {
-//   name: 'Ubat',
-//   roles: ['Admin', 'SuperAdmin', 'User'],
-// };
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -24,9 +17,9 @@ export class RolesGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const app = this.admin.setup();
-    // const requiredRoles = this.reflector.get(Roles, context.getHandler());
+
     const permissions = this.reflector.get<string[]>(
-      'permissions',
+      'roles',
       context.getHandler(),
     );
     const request = context.switchToHttp().getRequest<Request>();
@@ -36,14 +29,14 @@ export class RolesGuard implements CanActivate {
     try {
       const claims = await app.auth().verifyIdToken(token);
 
-      if (claims.permissions === permissions[0]) {
+      if (claims.roles.some((role: string) => permissions.includes(role))) {
         return true;
       }
-      throw new UnauthorizedException();
     } catch (error) {
       console.log('Error', error);
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(
+        'Something went wrong please try again later!',
+      );
     }
-    // return false;
   }
 }

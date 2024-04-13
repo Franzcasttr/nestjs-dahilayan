@@ -9,7 +9,7 @@ export interface IGetAllUserResponse {
     email: string;
     image: string;
     phone_number: number;
-    role: $Enums.Role;
+    roles: $Enums.Roles[];
     userreviewId: string;
     createdAt: Date;
   }[];
