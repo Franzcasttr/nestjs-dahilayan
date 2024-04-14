@@ -7,7 +7,7 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
+
   // UseGuards,
   UseInterceptors,
   ValidationPipe,
@@ -17,13 +17,8 @@ import { AdminUsersService } from '../services/admin-users.service';
 import { IGetAllUserResponse } from '../interface/getAllUserResponse.interface';
 import { UsersInterceptor } from '../interceptor/users.interceptor';
 import { DeleteUserInterceptor } from '../interceptor/delete-user.interceptor';
-// import { AuthGuard } from 'src/guards/auth.guard';
-// import { Roles } from 'src/decorators/role.decorator';
-// import { RolesGuard } from 'src/guards/role.guard';
-import { Auth } from 'src/decorators/Auth.decorator';
-import { UserInterceptor } from 'src/interceptors/user.interceptor';
-import { CurrentUser } from 'src/decorators/current-user.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
+
+import { Role } from 'src/decorators/Auth.decorator';
 
 @Controller('api/v1/admin/users')
 export class AdminUserController {
@@ -44,7 +39,7 @@ export class AdminUserController {
   }
 
   @Get()
-  @Auth('Admin', 'SuperAdmin')
+  @Role('Admin', 'SuperAdmin')
   getAllUsers(
     @Query('pages') pages: number,
     @Query('search') search: string,
@@ -52,22 +47,22 @@ export class AdminUserController {
     return this.usersService.getAllUsers(pages, search);
   }
 
-  @Get('current-user')
-  @UseGuards(AuthGuard)
-  @UseInterceptors(UserInterceptor)
-  currentUser(@CurrentUser('displayName') name: string) {
-    return `hello ${name}`;
-  }
+  // @Get('current-user')
+  // @UseGuards(AuthGuard)
+  // @UseInterceptors(UserInterceptor)
+  // currentUser(@CurrentUser('displayName') name: string) {
+  //   return `hello ${name}`;
+  // }
 
   @Delete(':id')
-  @Auth('Admin')
+  @Role('Admin')
   @UseInterceptors(DeleteUserInterceptor)
   deleteOne(@Param('id') id: string) {
     return this.usersService.deleteUser(id);
   }
 
   @Put(':id')
-  @Auth('Admin', 'SuperAdmin')
+  @Role('Admin', 'SuperAdmin')
   updateOne(@Param('id') id: string, @Body() data: CreateUserDto) {
     return this.usersService.updateOne(id, data);
   }
