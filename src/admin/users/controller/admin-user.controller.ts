@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   // UseGuards,
   UseInterceptors,
   ValidationPipe,
@@ -20,6 +21,9 @@ import { DeleteUserInterceptor } from '../interceptor/delete-user.interceptor';
 // import { Roles } from 'src/decorators/role.decorator';
 // import { RolesGuard } from 'src/guards/role.guard';
 import { Auth } from 'src/decorators/Auth.decorator';
+import { UserInterceptor } from 'src/interceptors/user.interceptor';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('api/v1/admin/users')
 export class AdminUserController {
@@ -46,6 +50,13 @@ export class AdminUserController {
     @Query('search') search: string,
   ): Promise<IGetAllUserResponse> {
     return this.usersService.getAllUsers(pages, search);
+  }
+
+  @Get('current-user')
+  @UseGuards(AuthGuard)
+  @UseInterceptors(UserInterceptor)
+  currentUser(@CurrentUser('displayName') name: string) {
+    return `hello ${name}`;
   }
 
   @Delete(':id')
