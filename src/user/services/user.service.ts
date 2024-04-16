@@ -4,10 +4,14 @@ import { PrismaService } from 'src/module/prisma/prisma.service';
 import { LoginWithEmailDto } from '../dto/login-with-email.dto';
 import { UserDto } from '../dto/user.dto';
 import { Prisma } from '@prisma/client';
+import { FirebaseAdmin } from 'src/config/firebase.setup';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly admin: FirebaseAdmin,
+  ) {}
 
   async currentUser(uid: string) {
     try {
@@ -76,6 +80,7 @@ export class UserService {
     id: string,
     data: Prisma.UserUpdateInput,
   ): Promise<{ message: string }> {
+    const app = this.admin.setup();
     const { name, date_of_birth, gender, phone_number } = data;
     if (name) {
       try {
@@ -86,6 +91,9 @@ export class UserService {
           data: {
             name,
           },
+        });
+        app.auth().updateUser(id, {
+          displayName: name as string,
         });
         return { message: 'Successfully updated' };
       } catch (error) {
@@ -159,6 +167,29 @@ export class UserService {
             'Something went wrong please try again later!',
           );
         }
+      }
+    }
+  }
+
+  async updateImage(uid: string, image: string) {
+    try {
+      await this.prisma.user.update({
+        where: {
+          id: uid,
+        },
+        data: {
+          image: image,
+        },
+      });
+      return { message: 'Successfully uploaded' };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestException({ errorMsg: error.message });
+      } else {
+        throw new BadRequestException({
+          errorMsg: 'Unexpected error',
+          error,
+        });
       }
     }
   }
