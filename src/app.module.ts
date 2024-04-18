@@ -8,6 +8,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AdminUserModule } from './admin/users/module/admin-user.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { AdminRoomsModule } from './admin/rooms/rooms.module';
+import { AdminBookingsModule } from './admin/bookings/modules/bookings.module';
+import { BookingsModule } from './bookings/modules/bookings.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { AdminRoomsModule } from './admin/rooms/rooms.module';
     AdminUserModule,
     AdminRoomsModule,
     RoomsModule,
+    AdminBookingsModule,
+    BookingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
