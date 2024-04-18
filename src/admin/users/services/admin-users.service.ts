@@ -44,7 +44,6 @@ export class AdminUsersService {
       });
       return { result, msg: 'Successfully Created!' };
     } catch (error) {
-      console.log(error);
       throw new BadRequestException(
         'Something went wrong please try again later!',
       );

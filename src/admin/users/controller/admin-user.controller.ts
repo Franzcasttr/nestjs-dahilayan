@@ -34,6 +34,7 @@ export class AdminUserController {
   }
 
   @Post('set-custom-claims')
+  @Role('Admin', 'SuperAdmin')
   setCustomClaim(@Body() uid: string, roles: string[]) {
     return this.usersService.setCustomClaim(uid, roles);
   }

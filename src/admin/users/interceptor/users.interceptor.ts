@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   CallHandler,
   ExecutionContext,
   Injectable,
@@ -7,13 +8,25 @@ import {
 import { Observable, map } from 'rxjs';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { instanceToPlain } from 'class-transformer';
+import { FirebaseAdmin } from 'src/config/firebase.setup';
 
 @Injectable()
 export class UsersInterceptor implements NestInterceptor {
-  intercept(
+  constructor(private readonly admin: FirebaseAdmin) {}
+  async intercept(
     context: ExecutionContext,
     next: CallHandler<CreateUserDto>,
-  ): Observable<any> {
+  ): Promise<Observable<any>> {
+    const app = this.admin.setup();
+    const request = context.switchToHttp().getRequest();
+
+    try {
+      const user = await app.auth().getUser(request.claims.uid);
+      request.currentUser = user;
+    } catch (error) {
+      console.log('Error', error);
+      throw new BadRequestException();
+    }
     return next.handle().pipe(map((data) => instanceToPlain(data)));
   }
 }
