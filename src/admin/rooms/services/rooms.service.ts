@@ -2,9 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/module/prisma/prisma.service';
 import { CreateRoomDto } from '../dto/create-room.dto';
-import { ImageType } from '../types/Image.type';
 import { CloudinaryService } from 'src/cloudinary/services/cloudinary.service';
 import { UpdateRoomDto } from '../dto/update-room.dto';
+import { ImageType } from 'src/types/Image.type';
 
 @Injectable()
 export class RoomsService {

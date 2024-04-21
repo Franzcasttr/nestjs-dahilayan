@@ -15,10 +15,10 @@ import { CreateRoomDto } from '../dto/create-room.dto';
 import { CloudinaryService } from 'src/cloudinary/services/cloudinary.service';
 import fs from 'fs';
 import { RoomsService } from '../services/rooms.service';
-import { ImageType } from '../types/Image.type';
 import { Role } from 'src/decorators/Auth.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { UpdateRoomDto } from '../dto/update-room.dto';
+import { ImageType } from 'src/types/Image.type';
 
 @Controller('api/v1/admin/rooms')
 export class RoomsController {
