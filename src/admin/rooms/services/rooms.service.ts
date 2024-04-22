@@ -6,6 +6,8 @@ import { CloudinaryService } from 'src/cloudinary/services/cloudinary.service';
 import { UpdateRoomDto } from '../dto/update-room.dto';
 import { ImageType } from 'src/types/Image.type';
 
+import * as fs from 'fs';
+
 @Injectable()
 export class RoomsService {
   constructor(
@@ -13,23 +15,50 @@ export class RoomsService {
     private cloudinary: CloudinaryService,
   ) {}
 
-  async create(
-    data: CreateRoomDto,
-    imageData: { urls: ImageType; public_image_id: string[] },
-  ) {
+  async create(data: CreateRoomDto, files: Express.Multer.File[]) {
     const {
       amenities,
-      bathrooms,
-      bedrooms,
-      beds,
+      bathrooms: room_bathrooms,
+      bedrooms: room_bedrooms,
+      beds: room_beds,
       bedtype,
       description,
       name,
-      number_of_guests,
-      price,
+      number_of_guests: room_guest,
+      price: room_price,
     } = data;
 
-    const { public_image_id, urls } = imageData;
+    const price = parseInt(room_price.toString());
+    const number_of_guests = parseInt(room_guest.toString());
+    const bedrooms = parseInt(room_bedrooms.toString());
+    const beds = parseInt(room_beds.toString());
+    const bathrooms = parseInt(room_bathrooms.toString());
+
+    const imageFile = files;
+    if (imageFile?.length === 0) {
+      throw new BadRequestException({ message: 'Please upload an image' });
+    }
+    const uploaderImage = async (path: string) => {
+      try {
+        return await this.cloudinary.ImageUploader(path, 'Hotel Rooms');
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new BadRequestException({ message: error.message });
+        }
+      }
+    };
+    const urls: ImageType = [];
+    const public_image_id: string[] = [];
+
+    if (Array.isArray(imageFile)) {
+      for (const file of imageFile) {
+        const { path } = file;
+        const newPath = await uploaderImage(path);
+        urls.push({ url: newPath.secure_url });
+        public_image_id.push(newPath.public_id);
+        fs.unlinkSync(path);
+      }
+    }
 
     try {
       await this.prisma.rooms.create({
@@ -57,9 +86,12 @@ export class RoomsService {
       return { message: 'Success' };
     } catch (error) {
       if (error instanceof Error) {
-        throw new BadRequestException({ errorMsg: error.message });
+        throw new BadRequestException({ message: error.message });
       } else {
-        throw new BadRequestException({ errorMsg: 'Unexpected error', error });
+        throw new BadRequestException({
+          message: 'Unexpected error',
+          error,
+        });
       }
     }
   }
@@ -159,16 +191,16 @@ export class RoomsService {
 
   async updateOne(id: string, data: UpdateRoomDto) {
     const {
-      name,
       image_url,
-      price,
-      bedtype,
-      number_of_guests,
+      amenities,
+      bathrooms,
       bedrooms,
       beds,
-      bathrooms,
-      amenities,
+      bedtype,
       description,
+      name,
+      number_of_guests,
+      price,
     } = data;
 
     try {
@@ -201,9 +233,9 @@ export class RoomsService {
       return { message: 'Successfully updated rooms' };
     } catch (error) {
       if (error instanceof Error) {
-        throw new BadRequestException({ errorMsg: error.message });
+        throw new BadRequestException({ message: error.message });
       } else {
-        throw new BadRequestException({ errorMsg: 'Unexpected error', error });
+        throw new BadRequestException({ message: 'Unexpected error', error });
       }
     }
   }

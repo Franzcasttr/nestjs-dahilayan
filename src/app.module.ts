@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -16,11 +16,28 @@ import { WebhookController } from './module/stripe/webhook/webhook.controller';
 import { VenueModule } from './venue/modules/venue.module';
 import { VenueService } from './venue/services/venue.service';
 import { AdminVenueModule } from './admin/venue/modules/venue.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: '.env',
       expandVariables: true,
+    }),
+    MulterModule.register({
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+          return cb(null, `${randomName}${extname(file.originalname)}`);
+        },
+      }),
     }),
     UserModule,
     PrismaModule,
@@ -36,5 +53,6 @@ import { AdminVenueModule } from './admin/venue/modules/venue.module';
   ],
   controllers: [AppController, WebhookController],
   providers: [AppService, VenueService],
+  exports: [MulterModule],
 })
 export class AppModule {}
