@@ -13,12 +13,11 @@ import { BookingsModule } from './bookings/modules/bookings.module';
 import { OrderModule } from './orders/modules/order.module';
 import { StripeModule } from './module/stripe/stripe.module';
 import { WebhookController } from './module/stripe/webhook/webhook.controller';
-import { VenueModule } from './venue/modules/venue.module';
-import { VenueService } from './venue/services/venue.service';
-import { AdminVenueModule } from './admin/venue/modules/venue.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { AdminVenuesModule } from './admin/venues/modules/venues.module';
+import { VenuesModule } from './venues/modules/venues.module';
 
 @Global()
 @Module({
@@ -48,11 +47,11 @@ import { extname } from 'path';
     BookingsModule,
     OrderModule,
     StripeModule,
-    VenueModule,
-    AdminVenueModule,
+    VenuesModule,
+    AdminVenuesModule,
   ],
   controllers: [AppController, WebhookController],
-  providers: [AppService, VenueService],
+  providers: [AppService],
   exports: [MulterModule],
 })
 export class AppModule {}
