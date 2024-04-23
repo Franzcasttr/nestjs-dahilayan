@@ -18,6 +18,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AdminVenuesModule } from './admin/venues/modules/venues.module';
 import { VenuesModule } from './venues/modules/venues.module';
+import { AdminRidesModule } from './admin/rides/modules/rides.module';
+import { RidesModule } from './rides/modules/rides.module';
 
 @Global()
 @Module({
@@ -49,6 +51,8 @@ import { VenuesModule } from './venues/modules/venues.module';
     StripeModule,
     VenuesModule,
     AdminVenuesModule,
+    AdminRidesModule,
+    RidesModule,
   ],
   controllers: [AppController, WebhookController],
   providers: [AppService],

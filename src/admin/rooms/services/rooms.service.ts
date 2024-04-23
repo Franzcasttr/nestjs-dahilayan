@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { PrismaService } from 'src/module/prisma/prisma.service';
 import { CreateRoomDto } from '../dto/create-room.dto';
@@ -155,88 +159,99 @@ export class RoomsService {
   }
 
   async deleteOne(id: string) {
-    const findImage = this.prisma.images.findMany({
-      where: {
-        roomImageById: id,
-      },
-    });
+    const isExist = await this.prisma.rooms.findUnique({ where: { id } });
+    if (isExist) {
+      const findImage = this.prisma.images.findMany({
+        where: {
+          roomImageById: id,
+        },
+      });
 
-    const deleteImage = this.prisma.images.deleteMany({
-      where: {
-        roomImageById: id,
-      },
-    });
+      const deleteImage = this.prisma.images.deleteMany({
+        where: {
+          roomImageById: id,
+        },
+      });
 
-    const deleteRooms = this.prisma.rooms.delete({
-      where: { id },
-    });
-    try {
-      const result = await this.prisma.$transaction([
-        findImage,
-        deleteImage,
-        deleteRooms,
-      ]);
-      if (result) {
-        this.cloudinary.DeleteImage(result[0][0].public_id);
-        return { message: 'Venue successfully deleted' };
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new BadRequestException({ errorMsg: error.message });
-      } else {
-        throw new BadRequestException({ errorMsg: 'Unexpected error', error });
+      const deleteRooms = this.prisma.rooms.delete({
+        where: { id },
+      });
+      try {
+        const result = await this.prisma.$transaction([
+          findImage,
+          deleteImage,
+          deleteRooms,
+        ]);
+        if (result) {
+          this.cloudinary.DeleteImage(result[0][0].public_id);
+          return { message: 'Venue successfully deleted' };
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new BadRequestException({ errorMsg: error.message });
+        } else {
+          throw new BadRequestException({
+            errorMsg: 'Unexpected error',
+            error,
+          });
+        }
       }
     }
+    throw new NotFoundException({ message: `Rides with ${id} was not found` });
   }
 
   async updateOne(id: string, data: UpdateRoomDto) {
-    const {
-      image_url,
-      amenities,
-      bathrooms,
-      bedrooms,
-      beds,
-      bedtype,
-      description,
-      name,
-      number_of_guests,
-      price,
-    } = data;
+    const isExist = await this.prisma.rooms.findUnique({ where: { id } });
+    if (isExist) {
+      const {
+        image_url,
+        amenities,
+        bathrooms,
+        bedrooms,
+        beds,
+        bedtype,
+        description,
+        name,
+        number_of_guests,
+        price,
+      } = data;
 
-    try {
-      await this.prisma.rooms.update({
-        where: {
-          id,
-        },
-        data: {
-          name,
-          image_url: {
-            updateMany: {
-              where: {
-                roomImageById: id,
-              },
-              data: {
-                url: image_url,
+      try {
+        await this.prisma.rooms.update({
+          where: {
+            id,
+          },
+          data: {
+            name,
+            image_url: {
+              updateMany: {
+                where: {
+                  roomImageById: id,
+                },
+                data: {
+                  url: image_url,
+                },
               },
             },
+            price,
+            bedtype,
+            number_of_guests,
+            bedrooms,
+            beds,
+            bathrooms,
+            amenities,
+            description,
           },
-          price,
-          bedtype,
-          number_of_guests,
-          bedrooms,
-          beds,
-          bathrooms,
-          amenities,
-          description,
-        },
-      });
-      return { message: 'Room successfully updated' };
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new BadRequestException({ message: error.message });
-      } else {
-        throw new BadRequestException({ message: 'Unexpected error', error });
+        });
+        return { message: 'Room successfully updated' };
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new BadRequestException({ message: error.message });
+        } else {
+          throw new BadRequestException({ message: 'Unexpected error', error });
+        }
       }
     }
+    throw new NotFoundException({ message: `Room with ${id} was not found` });
   }
 }
