@@ -83,7 +83,7 @@ export class RoomsService {
           description,
         },
       });
-      return { message: 'Success' };
+      return { message: 'Successfully created' };
     } catch (error) {
       if (error instanceof Error) {
         throw new BadRequestException({ message: error.message });
@@ -178,7 +178,7 @@ export class RoomsService {
       ]);
       if (result) {
         this.cloudinary.DeleteImage(result[0][0].public_id);
-        return { message: 'Successfully deleted rooms' };
+        return { message: 'Venue successfully deleted' };
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -230,7 +230,7 @@ export class RoomsService {
           description,
         },
       });
-      return { message: 'Successfully updated rooms' };
+      return { message: 'Room successfully updated' };
     } catch (error) {
       if (error instanceof Error) {
         throw new BadRequestException({ message: error.message });
