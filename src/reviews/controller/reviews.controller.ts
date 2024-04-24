@@ -1,8 +1,15 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateReviewDto } from '../dto/create-review.dto';
 import { ReviewsService } from '../services/reviews.service';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { UserInterceptor } from 'src/interceptors/user.interceptor';
 
 @Controller('api/v1/reviews')
 export class ReviewsController {
@@ -16,6 +23,7 @@ export class ReviewsController {
 
   @Get('userReview')
   @UseGuards(AuthGuard)
+  @UseInterceptors(UserInterceptor)
   findMany(@CurrentUser('uid') uid: string) {
     return this.reviewService.findMany(uid);
   }
