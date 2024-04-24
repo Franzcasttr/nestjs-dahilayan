@@ -20,6 +20,8 @@ import { AdminVenuesModule } from './admin/venues/modules/venues.module';
 import { VenuesModule } from './venues/modules/venues.module';
 import { AdminRidesModule } from './admin/rides/modules/rides.module';
 import { RidesModule } from './rides/modules/rides.module';
+import { ReviewsModule } from './reviews/module/reviews.module';
+import { FavoriteModule } from './favorite/modules/favorite.module';
 
 @Global()
 @Module({
@@ -53,6 +55,8 @@ import { RidesModule } from './rides/modules/rides.module';
     AdminVenuesModule,
     AdminRidesModule,
     RidesModule,
+    ReviewsModule,
+    FavoriteModule,
   ],
   controllers: [AppController, WebhookController],
   providers: [AppService],
