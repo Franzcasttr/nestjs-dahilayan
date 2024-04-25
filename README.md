@@ -1,30 +1,54 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Dahilayan Backed Server
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![GitHub issues](https://img.shields.io/github/issues/Franzcasttr/nestjs-dahilayan)
+![GitHub stars](https://img.shields.io/github/stars/Franzcasttr/nestjs-dahilayan?style=social&label=Star&maxAge=2592000)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<!-- [![Known Vulnerabilities](https://snyk.io/test/github/joeygoksu/prime-nestjs/badge.svg)](https://snyk.io/test/github/joeygoksu/prime-nestjs) -->
 
-## Description
+## Frontent link
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+If you are looking for the frontend code
+[Dahilayan frontend](https://github.com/Franzcasttr/dahilayan-client-public).
+
+## 📖 Description
+
+![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)
+![Maintenance](https://img.shields.io/maintenance/yes/2024)
+![GitHub last commit](https://img.shields.io/github/last-commit/Franzcasttr/nestjs-dahilayan)
+![GitHub repo size](https://img.shields.io/github/repo-size/Franzcasttr/nestjs-dahilayan)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Franzcasttr/nestjs-dahilayan)
+![GitHub top language](https://img.shields.io/github/languages/top/Franzcasttr/nestjs-dahilayan)
+![GitHub language count](https://img.shields.io/github/languages/count/Franzcasttr/nestjs-dahilayan)
+![GitHub contributors](https://img.shields.io/github/contributors/Franzcasttr/nestjs-dahilayan)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/Franzcasttr/nestjs-dahilayan)
+
+Welcome to the Dahilayan Adventure Park Backend repository! This project is built with the latest version of NestJS, offering a robust backend solution for managing various aspects of an amusement park.
+
+## 🚀 Features
+
+- 📱 **NestJS** — latest version
+- 🛏️ **Room Management** — Create, Read, Update, and Delete rooms for accommodations.
+- 🏟️ **Venue Management** — Manage venues within the park, including creation, editing, and deletion.
+- 🎢 **Rides Management** — Handle rides with ease - create, update, and delete them effortlessly.
+- 📑 **Booking System** — Enable users to create and view bookings for park activities
+- ⭐️ **Reviews Module** — Allow users to leave reviews, view existing ones, and delete their reviews if needed.
+- ♥️ **Favorites** —Users can mark their favorite room, view them, and remove them from favorites.
+- 🧔‍♂️ **Account Management** — Users can edit and update their account information hassle-free.
+- 🧔‍♂️ **User Roles** — Admins have the ability to manage user roles for better access control.
+- 📈 **Admin Dashboards** — Integrated dashboards for admins to monitor sales, booking statuses, and more.
+- 🎉 **TypeScript Support** - Full type checking provided by TypeScript for enhanced development experience.
+- 🗝 **Authentication** - tilizes Firebase Authentication for secure user authentication
+- 🏬 **Authorization** - Implements Role-Based Access Control (RBAC) and Context-Based Access Control (CBAC) for granular authorization.
+- 🏪 **ORM** - Powered by Prisma ORM for seamless database interactions.
+- 🏪 **PostgreSQL** - Utilizes PostgreSQL, an open-source relational database, for data persistence.
+- 🐳 **Docker Compose** - Container orchestration with Docker Compose for easy deployment and scalability.
+- 📏 **ESLint** — Pluggable JavaScript linter for maintaining code quality.
+- 💖 **Prettier** - Opinionated code formatter to keep your codebase clean and consistent.
+  <!-- - 📃 **Swagger** - API Documentation -->
+  <!-- - 🔐 **Helmet** - secure HTTP headers -->
+    <!-- - ✨ **Commitlint** - Lint your conventional commits -->
+    <!-- - 🕵️‍♂️ **Code Scanning** - Code scanning with CodeQL -->
 
 ## Installation
 
@@ -58,16 +82,12 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Francis Castro](https://www.linkedin.com/in/franciscastro224)
+- Website - [https://franciscastro.dev](https://franciscastro.dev/)
+- Twitter - [@franzz_me](https://twitter.com/franzz_me)
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+Dahilayan is [MIT licensed](LICENSE).
