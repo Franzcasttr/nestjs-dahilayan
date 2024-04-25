@@ -6,7 +6,7 @@
 
 <!-- [![Known Vulnerabilities](https://snyk.io/test/github/joeygoksu/prime-nestjs/badge.svg)](https://snyk.io/test/github/joeygoksu/prime-nestjs) -->
 
-## Frontent link
+## Frontend link
 
 If you are looking for the frontend code
 [Dahilayan frontend](https://github.com/Franzcasttr/dahilayan-client-public).
