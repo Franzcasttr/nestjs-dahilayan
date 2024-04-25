@@ -38,7 +38,7 @@ Welcome to the Dahilayan Adventure Park Backend repository! This project is buil
 - 🧔‍♂️ **User Roles** — Admins have the ability to manage user roles for better access control.
 - 📈 **Admin Dashboards** — Integrated dashboards for admins to monitor sales, booking statuses, and more.
 - 🎉 **TypeScript Support** - Full type checking provided by TypeScript for enhanced development experience.
-- 🗝 **Authentication** - tilizes Firebase Authentication for secure user authentication
+- 🗝 **Authentication** - Utilizes Firebase Authentication for secure user authentication
 - 🏬 **Authorization** - Implements Role-Based Access Control (RBAC) and Context-Based Access Control (CBAC) for granular authorization.
 - 🏪 **ORM** - Powered by Prisma ORM for seamless database interactions.
 - 🏪 **PostgreSQL** - Utilizes PostgreSQL, an open-source relational database, for data persistence.
