@@ -4,13 +4,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { PrismaService } from 'src/module/prisma/prisma.service';
+import { PrismaService } from '../../../module/prisma/prisma.service';
 import { CreateRoomDto } from '../dto/create-room.dto';
-import { CloudinaryService } from 'src/cloudinary/services/cloudinary.service';
+import { CloudinaryService } from '../../../cloudinary/services/cloudinary.service';
 import { UpdateRoomDto } from '../dto/update-room.dto';
 import { ImageType } from 'src/types/Image.type';
 
 import * as fs from 'fs';
+import { RoomResponseDto } from '../dto/room-response.dto';
 
 @Injectable()
 export class RoomsService {
@@ -105,7 +106,7 @@ export class RoomsService {
     const skip = (page - 1) * 10;
     const searchQuery = search?.toString();
     try {
-      const user = await this.prisma.rooms.findMany({
+      const rooms = await this.prisma.rooms.findMany({
         skip,
         take: 10,
         where: {
@@ -122,12 +123,12 @@ export class RoomsService {
         },
       });
       if (searchQuery) {
-        const numberOfPages = Math.ceil(user.length / 10);
-        return { user, numberOfPages };
+        const numberOfPages = Math.ceil(rooms.length / 10);
+        return { rooms, numberOfPages };
       } else {
-        const totalUser = await this.prisma.user.count();
-        const numberOfPages = Math.ceil(totalUser / 10);
-        return { user, numberOfPages };
+        const totalRooms = await this.prisma.rooms.count();
+        const numberOfPages = Math.ceil(totalRooms / 10);
+        return { rooms, numberOfPages };
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -138,7 +139,7 @@ export class RoomsService {
     }
   }
 
-  async findMany() {
+  async findMany(): Promise<RoomResponseDto> {
     try {
       const rooms = await this.prisma.rooms.findMany({
         orderBy: {
@@ -148,12 +149,15 @@ export class RoomsService {
           image_url: true,
         },
       });
+      if (rooms.length < 1) {
+        throw new BadRequestException('No rooms found');
+      }
       return { rooms };
     } catch (error) {
       if (error instanceof Error) {
-        throw new BadRequestException({ errorMsg: error.message });
+        throw new BadRequestException(error.message);
       } else {
-        throw new BadRequestException({ errorMsg: 'Unexpected error', error });
+        throw new BadRequestException('Unexpected error', error);
       }
     }
   }

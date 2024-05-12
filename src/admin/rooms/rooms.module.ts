@@ -6,8 +6,16 @@ import { CloudinaryService } from 'src/cloudinary/services/cloudinary.service';
 import { FirebaseAdmin } from 'src/config/firebase.setup';
 
 @Module({
-  providers: [RoomsService, CloudinaryService, FirebaseAdmin],
-  controllers: [RoomsController],
   imports: [PrismaModule],
+  providers: [
+    RoomsService,
+    // {
+    //   provide: 'ROOMS_SERVICE',
+    //   useClass: RoomsService,
+    // },
+    CloudinaryService,
+    FirebaseAdmin,
+  ],
+  controllers: [RoomsController],
 })
 export class AdminRoomsModule {}
